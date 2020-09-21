@@ -1,0 +1,24 @@
+{
+  "name": "jbchat-server",
+  "version": "0.1.0",
+  "description": "Server application for the JBChat environment",
+  "main": "dist/index.js",
+  "scripts": {
+    "start": "nodemon ."
+  },
+  "keywords": [
+    "programming",
+    "learning",
+    "sockets"
+  ],
+  "author": {
+    "name": "Jay Cuevas",
+    "email": "cuevasj@usf.edu",
+    "url": "https://github.com/JayCuevas"
+  },
+  "contributors": [],
+  "license": "GPL",
+  "devDependencies": {
+    "nodemon": "^2.0.4"
+  }
+}
