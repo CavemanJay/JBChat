@@ -16,7 +16,13 @@
     "email": "cuevasj@usf.edu",
     "url": "https://github.com/JayCuevas"
   },
-  "contributors": [],
+  "contributors": [
+    {
+      "email": "bjoud@usf.edu",
+      "name": "Bilal Joud",
+      "url": "https://github.com/Boud7"
+    }
+  ],
   "license": "GPL",
   "devDependencies": {
     "nodemon": "^2.0.4",
