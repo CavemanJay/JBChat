@@ -4,7 +4,7 @@
   "description": "Server application for the JBChat environment",
   "main": "dist/index.js",
   "scripts": {
-    "start": "node --inspect=5858 -r ts-node/register ./src/index.ts",
+    "start": "yarn node --inspect=5858 -r ts-node/register ./src/index.ts",
     "dev": "nodemon",
     "build": "tsc"
   },
