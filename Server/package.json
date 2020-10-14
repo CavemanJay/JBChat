@@ -4,7 +4,8 @@
   "description": "Server application for the JBChat environment",
   "main": "dist/index.js",
   "scripts": {
-    "start": "nodemon ."
+    "start": "node .",
+    "prestart": "tsc"
   },
   "keywords": [
     "programming",
