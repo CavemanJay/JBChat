@@ -4,23 +4,25 @@ import * as path from "path";
 import * as bodyParser from "body-parser";
 import { Room } from "./Models";
 import { v4 as uuid } from "uuid";
+import { config } from "dotenv";
+config();
 
 const rooms: Room[] = [];
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 app.use(bodyParser.json());
 
 // home route
-app.get("/", (request, response) => {
+app.get("/", (req, res) => {
   // const content = fs
   //   .readFileSync(path.join(__dirname, "..", "index.html"))
   //   .toString();
 
   // response.send(content);
 
-  response.send(`Available rooms: ${JSON.stringify(rooms)}`);
+  res.send(`Available rooms: ${JSON.stringify(rooms)}`);
 });
 
 app.post("/new_room", (req, res) => {
@@ -38,7 +40,7 @@ app.post("/messages", (req, res) => {
   const targetRoom = rooms.find((room) => room.id === roomId);
 
   if (targetRoom) {
-    targetRoom?.messages.push(message);
+    targetRoom.messages.push(message);
     res.sendStatus(200);
   } else {
     res.sendStatus(404);
