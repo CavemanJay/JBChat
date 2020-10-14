@@ -5,6 +5,7 @@
     "listEmittedFiles": true,
     "noImplicitAny": true,
     "strict": true,
-    "alwaysStrict": true
+    "alwaysStrict": true,
+    "sourceMap": true
   }
 }
