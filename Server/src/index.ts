@@ -18,10 +18,6 @@ const io = socketIO(server, { path: "/chat" });
 
 const port = process.env.PORT || "3000";
 
-io.on("connection", (socket) => {
-  console.log(socket);
-});
-
 // io.listen(parseInt(port));
 
 // This allows us to parse json-formatted post requests
@@ -63,6 +59,10 @@ app.post("/messages", (req, res) => {
 // app.listen(port, () => {
 //   console.log("Listening on port " + port);
 // });
+
+io.on("connection", (socket) => {
+  console.log(socket);
+});
 
 server.listen(port, () => {
   console.log("Listening on port:", port);
