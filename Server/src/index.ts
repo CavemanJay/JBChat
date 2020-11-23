@@ -5,11 +5,12 @@ import express from "express";
 import * as fs from "fs";
 import * as path from "path";
 import * as bodyParser from "body-parser";
-import { Room } from "./Models";
+import { Room } from "./interfaces";
 import { v4 as uuid } from "uuid";
 import http from "http";
 
 import socketIO from "socket.io";
+import { Routes } from "./routes";
 
 const rooms: Room[] = [
   { id: "General", messages: ["Hi! Welcome to JB Chat!"] },
@@ -21,7 +22,7 @@ function createRoom(id: string) {
 
 const app = express();
 const server = http.createServer(app);
-const io = socketIO(server, { path: "/chat" });
+const io = socketIO(server, { path: Routes.CHAT });
 
 const port = process.env.PORT || "3000";
 
@@ -31,7 +32,7 @@ const port = process.env.PORT || "3000";
 app.use(bodyParser.json());
 
 // home route
-app.get("/", (req, res) => {
+app.get(Routes.BASE, (req, res) => {
   // const content = fs
   //   .readFileSync(path.join(__dirname, "..", "index.html"))
   //   .toString();
@@ -41,16 +42,16 @@ app.get("/", (req, res) => {
   res.send(`Available rooms: ${JSON.stringify(rooms)}`);
 });
 
-app.post("/new_room", (req, res) => {
+app.post(Routes.NEW_ROOM, (req, res) => {
   rooms.push({ id: uuid(), messages: [] });
   res.sendStatus(200);
 });
 
-app.get("/messages", (req, res) => {
+app.get(Routes.MESSAGES, (req, res) => {
   // res.send(messages);
 });
 
-app.post("/messages", (req, res) => {
+app.post(Routes.MESSAGES, (req, res) => {
   const { roomId, message } = req.body;
 
   const targetRoom = rooms.find((room) => room.id === roomId);
@@ -100,3 +101,5 @@ io.on("connection", (socket) => {
 server.listen(port, () => {
   console.log("Listening on port:", port);
 });
+
+console.log(process.env.VARIABLE_X);
