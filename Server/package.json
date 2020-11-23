@@ -6,6 +6,7 @@
   "scripts": {
     "start": "node .",
     "build": "tsc",
+    "watch" : "tsc -w",
     "clean": "rm -rvf dist",
     "dev": "concurrently \"tsc -w\" \"nodemon dist/index.js\"",
     "prestart": "tsc"
