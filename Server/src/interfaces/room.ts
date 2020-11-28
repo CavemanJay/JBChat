@@ -1,4 +1,6 @@
+import { Message } from ".";
+
 export interface Room {
   id: string;
-  messages: string[];
+  messages: Message[];
 }
