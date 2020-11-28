@@ -1,6 +1,6 @@
-export enum Routes {
-    BASE = "/",
-    CHAT = "/chat",
-    MESSAGES = "/messages",
-    NEW_ROOM = "/new_room",
-  }
+export const routes = {
+  base: "/",
+  chat: "/chat",
+  messages: "/messages",
+  newRoom: "/new_room",
+};
