@@ -3,6 +3,7 @@ import { Message, Room } from "./interfaces";
 
 export function configureEvents(
   socket: socketIO.Socket,
+  id: string,
   room: string,
   createRoom: Function,
   newMessage: Function
@@ -25,6 +26,7 @@ export function configureEvents(
   });
 
   socket.on("clientMessage", (message: Message) => {
+    message.sender = id;
     newMessage(message);
   });
 }

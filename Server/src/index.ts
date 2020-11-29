@@ -89,13 +89,13 @@ function sendMessage(roomId: string, message: Message) {
 }
 
 io.on("connection", (socket) => {
-  const { id, room } = socket.handshake.query;
+  const { id, room }: { id: string; room: string } = socket.handshake.query;
 
   const targetRoom = rooms.find((x) => x.id === room);
 
   // Configure socket event listeners
-  configureEvents(socket, room, createRoom, (message: Message) => {
-    // TODO: Figure out how to tie the message from the client to the room it is in
+  configureEvents(socket, id, room, createRoom, (message: Message) => {
+    console.log(message);
   });
 
   // If the room the client wants to join does not exist
