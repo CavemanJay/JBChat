@@ -95,7 +95,8 @@ io.on("connection", (socket) => {
 
   // Configure socket event listeners
   configureEvents(socket, id, room, createRoom, (message: Message) => {
-    console.log(message);
+    // console.log(message);
+    sendMessage(room, message);
   });
 
   // If the room the client wants to join does not exist
