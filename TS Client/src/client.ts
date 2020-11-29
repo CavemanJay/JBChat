@@ -20,7 +20,9 @@ interface Message {
   content: string;
 }
 
-socket.on("newMessage", (message: Message) => {});
+socket.on("newMessage", (message: Message) => {
+  console.log(message);
+});
 
 // Once we have connected to a room
 socket.on("joinedRoom", (message: Message) => {
