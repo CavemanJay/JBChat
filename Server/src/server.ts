@@ -130,10 +130,6 @@ export function start() {
   });
 }
 
-if (!process.env.DEBUG) {
-  start();
-}
-
 export function close() {
   server.close();
 }

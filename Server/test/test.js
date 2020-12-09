@@ -8,8 +8,6 @@ const ioOptions = {
   path: "/chat",
 };
 
-process.env.DEBUG = "true";
-
 let sender, receiver;
 
 describe("Events", function () {
