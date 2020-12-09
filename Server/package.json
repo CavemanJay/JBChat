@@ -2,7 +2,7 @@
   "name": "jbchat-server",
   "version": "0.1.0",
   "description": "Server application for the JBChat environment",
-  "main": "dist/index.js",
+  "main": "dist/server.js",
   "scripts": {
     "start": "node .",
     "build": "tsc",

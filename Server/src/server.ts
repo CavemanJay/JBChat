@@ -90,6 +90,7 @@ function sendMessage(roomId: string, message: Message) {
 
 io.on("connection", (socket) => {
   const { id, room }: { id: string; room: string } = socket.handshake.query;
+  console.log("Received connection");
 
   const targetRoom = rooms.find((x) => x.id === room);
 
@@ -97,6 +98,10 @@ io.on("connection", (socket) => {
   configureEvents(socket, id, room, createRoom, (message: Message) => {
     // console.log(message);
     sendMessage(room, message);
+  });
+
+  socket.on("message", (msg) => {
+    io.sockets.emit("message", msg);
   });
 
   // If the room the client wants to join does not exist
@@ -119,6 +124,16 @@ io.on("connection", (socket) => {
   }
 });
 
-server.listen(port, () => {
-  console.log("Listening on port:", port);
-});
+export function start() {
+  server.listen(port, () => {
+    console.log("Listening on port:", port);
+  });
+}
+
+if (!process.env.DEBUG) {
+  start();
+}
+
+export function close() {
+  server.close();
+}
