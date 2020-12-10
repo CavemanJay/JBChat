@@ -1,10 +1,7 @@
 import { config } from "dotenv";
 config();
 
-import express from "express";
-import * as bodyParser from "body-parser";
 import { Message, Room } from "./interfaces";
-import { v4 as uuid } from "uuid";
 import http from "http";
 
 import socketIO from "socket.io";
@@ -12,6 +9,7 @@ import { routes } from "./routes";
 import { configureEvents } from "./event listeners";
 import * as utils from "./utils";
 
+// The current in-memory data structure that stores the rooms and their messages
 const rooms: Room[] = [
   {
     id: "General",
@@ -24,55 +22,25 @@ const rooms: Room[] = [
   },
 ];
 
+/**
+ * Helper function to create a room with a given id
+ * @param id The id of the room
+ */
 function createRoom(id: string) {
   rooms.push({ id, messages: [] });
 }
 
-const app = express();
+const app = utils.configureExpress(createRoom);
 const server = http.createServer(app);
 const io = socketIO(server, { path: routes.chat });
 
 const port = process.env.PORT || "3000";
 
-// io.listen(parseInt(port));
-
-// This allows us to parse json-formatted post requests
-app.use(bodyParser.json());
-
-// home route
-app.get(routes.base, (req, res) => {
-  // const content = fs
-  //   .readFileSync(path.join(__dirname, "..", "index.html"))
-  //   .toString();
-
-  // response.send(content);
-
-  res.send(`Available rooms: ${JSON.stringify(rooms)}`);
-});
-
-app.post(routes.newRoom, (req, res) => {
-  rooms.push({ id: uuid(), messages: [] });
-  res.sendStatus(200);
-});
-
-app.get(routes.messages, (req, res) => {
-  // res.send(messages);
-});
-
-app.post(routes.messages, (req, res) => {
-  const { roomId, message } = req.body;
-
-  const targetRoom = rooms.find((room) => room.id === roomId);
-
-  if (targetRoom) {
-    targetRoom.messages.push(message);
-    res.sendStatus(200);
-  } else {
-    res.sendStatus(404);
-  }
-});
-
-// Helper function to send a message to a particular room
+/**
+ * Helper function to send a message to a particular room
+ * @param roomId The id of the room
+ * @param message The message to send to the room
+ */
 function sendMessage(roomId: string, message: Message) {
   // Find the target room
   const targetRoom = rooms.find((room) => room.id === roomId);
@@ -89,21 +57,30 @@ function sendMessage(roomId: string, message: Message) {
   io.to(targetRoom.id).emit("newMessage", message);
 }
 
+function broadcastToAllListeners(message: any) {
+  io.sockets.emit("message", message);
+}
+
 io.on("connection", (socket) => {
+  // Read parameters from the initial handshake
   const { id, room }: { id: string; room: string } = socket.handshake.query;
   utils.log("Received connection");
 
+  // Find the room that the client wants to join
   const targetRoom = rooms.find((x) => x.id === room);
 
   // Configure socket event listeners
-  configureEvents(socket, id, room, createRoom, (message: Message) => {
-    // console.log(message);
-    sendMessage(room, message);
-  });
-
-  socket.on("message", (msg) => {
-    io.sockets.emit("message", msg);
-  });
+  configureEvents(
+    socket,
+    id,
+    room,
+    createRoom,
+    (message: Message) => {
+      // console.log(message);
+      sendMessage(room, message);
+    },
+    broadcastToAllListeners
+  );
 
   // If the room the client wants to join does not exist
   if (!targetRoom) {
@@ -111,10 +88,8 @@ io.on("connection", (socket) => {
       `Received connection from user ${id} to room ${room}. Room nonexistent.`
     );
 
-    socket.emit(
-      "roomNotFound",
-      `The requested room '${room}' does not exist, do you wish to create it? `
-    );
+    // Notify the client that the room does not exist
+    socket.emit("roomNotFound", `The requested room '${room}' does not exist`);
   } else {
     socket.join(targetRoom.id);
 
@@ -127,7 +102,6 @@ io.on("connection", (socket) => {
 
 export function start(unitTesting = false) {
   process.env.UT = unitTesting ? "true" : undefined;
-  
 
   server.listen(port, () => {
     utils.log("Listening on port:", port);
