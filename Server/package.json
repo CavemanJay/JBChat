@@ -10,7 +10,7 @@
     "clean": "rm -rvf dist",
     "dev": "concurrently \"tsc -w\" \"nodemon dist/index.js\"",
     "prestart": "tsc",
-    "test": "mocha test/test.js"
+    "test": "mocha test"
   },
   "keywords": [
     "programming",

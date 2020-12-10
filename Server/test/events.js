@@ -14,7 +14,7 @@ describe("Events", function () {
   this.timeout(20000);
 
   this.beforeEach(function (done) {
-    server.start();
+    server.start(true);
 
     sender = io("http://localhost:3000", ioOptions);
     receiver = io("http://localhost:3000", ioOptions);
