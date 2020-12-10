@@ -1,5 +1,6 @@
 import socketIO from "socket.io";
 import { Message, Room } from "./interfaces";
+import * as utils from './utils'
 
 export function configureEvents(
   socket: socketIO.Socket,
@@ -16,7 +17,7 @@ export function configureEvents(
     }
 
     if (response.toLowerCase().startsWith("y")) {
-      console.log(`Creating room ${room}`);
+      utils.log(`Creating room ${room}`);
 
       createRoom(room);
       socket.join(room);

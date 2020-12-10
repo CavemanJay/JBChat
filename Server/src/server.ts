@@ -10,6 +10,7 @@ import http from "http";
 import socketIO from "socket.io";
 import { routes } from "./routes";
 import { configureEvents } from "./event listeners";
+import * as utils from "./utils";
 
 const rooms: Room[] = [
   {
@@ -90,7 +91,7 @@ function sendMessage(roomId: string, message: Message) {
 
 io.on("connection", (socket) => {
   const { id, room }: { id: string; room: string } = socket.handshake.query;
-  console.log("Received connection");
+  utils.log("Received connection");
 
   const targetRoom = rooms.find((x) => x.id === room);
 
@@ -106,7 +107,7 @@ io.on("connection", (socket) => {
 
   // If the room the client wants to join does not exist
   if (!targetRoom) {
-    console.log(
+    utils.log(
       `Received connection from user ${id} to room ${room}. Room nonexistent.`
     );
 
@@ -124,9 +125,12 @@ io.on("connection", (socket) => {
   }
 });
 
-export function start() {
+export function start(unitTesting = false) {
+  process.env.UT = unitTesting ? "true" : undefined;
+  
+
   server.listen(port, () => {
-    console.log("Listening on port:", port);
+    utils.log("Listening on port:", port);
   });
 }
 
