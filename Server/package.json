@@ -10,7 +10,8 @@
     "clean": "rm -rvf dist",
     "dev": "concurrently \"tsc -w\" \"nodemon dist/index.js\"",
     "test": "mocha test",
-    "dockerize": "docker build -t jaydelascuevas/jbchat ."
+    "docker:build": "docker build -t jaydelascuevas/jbchat .",
+    "docker:run": "docker run -d -p 3000:3000 jbchat:latest"
   },
   "keywords": [
     "programming",
