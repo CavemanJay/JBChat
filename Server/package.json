@@ -9,13 +9,14 @@
     "watch": "tsc -w",
     "clean": "rm -rvf dist",
     "dev": "concurrently \"tsc -w\" \"nodemon dist/index.js\"",
-    "prestart": "tsc",
-    "test": "mocha test"
+    "test": "mocha test",
+    "dockerize": "docker build -t jaydelascuevas/jbchat ."
   },
   "keywords": [
     "programming",
     "learning",
-    "sockets"
+    "sockets",
+    "docker"
   ],
   "author": {
     "name": "Jay Cuevas",
