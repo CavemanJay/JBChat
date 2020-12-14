@@ -30,7 +30,7 @@ function createRoom(id: string) {
   rooms.push({ id, messages: [] });
 }
 
-const app = utils.configureExpress(createRoom);
+const app = utils.configureExpress(createRoom, rooms);
 const server = http.createServer(app);
 const io = socketIO(server, { path: routes.chat });
 
