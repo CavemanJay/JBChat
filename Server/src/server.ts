@@ -63,41 +63,47 @@ function broadcastToAllListeners(message: any) {
 
 io.on("connection", (socket) => {
   // Read parameters from the initial handshake
-  const { id, room }: { id: string; room: string } = socket.handshake.query;
+  // const { id, room }: { id: string; room: string } = socket.handshake.query;
   utils.log("Received connection");
 
-  // Find the room that the client wants to join
-  const targetRoom = rooms.find((x) => x.id === room);
-
-  // Configure socket event listeners
-  configureEvents(
-    socket,
-    id,
-    room,
-    createRoom,
-    (message: Message) => {
-      // console.log(message);
-      sendMessage(room, message);
-    },
-    broadcastToAllListeners
+  // Send a list of available rooms
+  socket.emit(
+    "welcome",
+    rooms.map((x) => x.id)
   );
 
+  // Find the room that the client wants to join
+  // const targetRoom = rooms.find((x) => x.id === room);
+
+  // Configure socket event listeners
+  // configureEvents(
+  //   socket,
+  //   id,
+  //   room,
+  //   createRoom,
+  //   (message: Message) => {
+  //     // console.log(message);
+  //     sendMessage(room, message);
+  //   },
+  //   broadcastToAllListeners
+  // );
+
   // If the room the client wants to join does not exist
-  if (!targetRoom) {
-    utils.log(
-      `Received connection from user ${id} to room ${room}. Room nonexistent.`
-    );
+  // if (!targetRoom) {
+  //   utils.log(
+  //     `Received connection from user ${id} to room ${room}. Room nonexistent.`
+  //   );
 
-    // Notify the client that the room does not exist
-    socket.emit("roomNotFound", `The requested room '${room}' does not exist`);
-  } else {
-    socket.join(targetRoom.id);
+  //   // Notify the client that the room does not exist
+  //   socket.emit("roomNotFound", `The requested room '${room}' does not exist`);
+  // } else {
+  //   socket.join(targetRoom.id);
 
-    socket.emit("joinedRoom", {
-      content: `You have joined room: ${targetRoom.id}`,
-      sender: "Server",
-    });
-  }
+  //   socket.emit("joinedRoom", {
+  //     content: `You have joined room: ${targetRoom.id}`,
+  //     sender: "Server",
+  //   });
+  // }
 });
 
 export function start(unitTesting = false) {
