@@ -1,0 +1,12 @@
+div {
+  margin: 15px;
+}
+
+.room_card {
+  border: 1px solid black;
+  padding: 3px;
+}
+
+button {
+  margin: 4px;
+}
