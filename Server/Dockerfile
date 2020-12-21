@@ -1,20 +1,16 @@
-# Set the node version
-FROM node:14
-
-# Set the root path of the application
+# stage 1
+FROM node:14-alpine AS builder
 WORKDIR /usr/src/app
-
-# Install dependencies
 COPY package*.json ./
 RUN npm install
-
-# Copy source files into container
 COPY . .
-
-# Build the app
 RUN npm run build
 
-# Expose port that the app runs on
+# stage 2
+FROM node:14-alpine
+WORKDIR /app
+COPY package*.json ./
+RUN npm install --production
+COPY --from=builder /usr/src/app/dist .
 EXPOSE 3000
-
 CMD ["npm", "start"]
