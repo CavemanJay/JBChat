@@ -1,0 +1,16 @@
+div {
+  margin: 15px;
+}
+
+button {
+  margin: 4px;
+}
+
+.room_card {
+  border: 1px solid black;
+  padding: 3px;
+}
+
+.message_sender {
+  border-top: 2px black dashed;
+}
