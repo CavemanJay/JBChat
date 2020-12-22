@@ -1,42 +1,33 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { useSocket } from "../contexts/SocketProvider";
 
 export const Home = () => {
   const [message, setMessage] = useState("");
-  const [rooms, setRooms] = useState<string[]>(["General"]);
+  const [rooms, setRooms] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
-
-  //   const initializeSocket = () => {
-  //     const _socket = io("http://localhost:3000", {
-  //       path: "/chat",
-  //       // query: { id: "Jay", room: "General" },
-  //     });
-
-  //     _socket.on("welcome", (rooms: string[]) => {
-  //       setRooms(rooms);
-  //       setLoading(false);
-  //     });
-
-  //     _socket.connect();
-  //     // setSocket(_socket);
-  //   };
+  const socket = useSocket();
 
   // Code to run on initialization
   useEffect(() => {
-    // initializeSocket();
-    setLoading(false);
-  }, []);
+    if (!socket) return;
+
+    socket.once("welcome", (rooms: string[]) => {
+      setRooms(rooms);
+      setLoading(false);
+    });
+  }, [socket]);
 
   const changeMessage = (event: React.ChangeEvent<HTMLInputElement>) => {
     setMessage(event.target.value);
   };
 
-//   const joinRoom = (
-//     event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-//     room: string
-//   ) => {
-//     // Implement some sort of routing
-//   };
+  //   const joinRoom = (
+  //     event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+  //     room: string
+  //   ) => {
+  //     // Implement some sort of routing
+  //   };
 
   const sendMessage = () => {};
 
