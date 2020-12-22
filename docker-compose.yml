@@ -1,0 +1,18 @@
+version: "3"
+
+services:
+  frontend:
+    container_name: react_frontend
+    image: jbchat:dev-frontend
+    build: ./Frontend
+    ports:
+      - "8080:3000"
+    depends_on:
+      - server
+
+  server:
+    image: jbchat:dev-server
+    build: ./Server
+    container_name: server
+    ports:
+      - "3000:3000"

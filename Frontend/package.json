@@ -23,7 +23,11 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "docker:build-dev": "docker build -t jbchat:dev-frontend .",
+    "docker:build-prod": "docker build -t jbchat:latest-frontend -f Dockerfile.prod .",
+    "docker:run-dev": "docker run -d -p 3000:3000 jbchat:dev-frontend",
+    "docker:run-prod": "docker run -d -p 3000:3000 jbchat:latest-frontend"
   },
   "eslintConfig": {
     "extends": [
