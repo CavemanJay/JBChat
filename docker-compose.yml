@@ -1,0 +1,17 @@
+version: "3"
+
+services:
+  frontend:
+    image: jbchat:latest-frontend
+    build: ./Frontend
+    ports:
+      - "8080:80"
+    depends_on:
+      - server
+
+  server:
+    image: jbchat:latest-server
+    build: ./Server
+    container_name: server
+    ports:
+      - "3000:3000"
