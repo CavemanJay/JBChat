@@ -69,7 +69,7 @@ function broadcastToAllListeners(message: any) {
 io.on("connection", (socket: Socket) => {
   // Read parameters from the initial handshake
   // const { id, room }: { id: string; room: string } = socket.handshake.query;
-  utils.log("Received connection");
+  utils.log("Received connection from:", socket.client.conn.remoteAddress);
 
   // Send a list of available rooms
   socket.emit(
