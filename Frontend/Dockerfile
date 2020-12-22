@@ -12,6 +12,7 @@ FROM nginx:alpine
 WORKDIR /usr/share/nginx/html
 RUN rm -rvf ./*
 COPY --from=builder /app/build .
+COPY nginx/react.conf /etc/nginx/conf.d/default.conf
 EXPOSE 80
 CMD [ "nginx", "-g", "daemon off;" ]
 
