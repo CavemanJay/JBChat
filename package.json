@@ -1,0 +1,9 @@
+{
+  "name": "jbchat-composer",
+  "scripts": {
+    "prod": "docker-compose -f docker-compose.yml.prod up",
+    "dev": "docker-compose up",
+    "build": "cd Server && npm run docker:build-dev && cd ../Frontend && npm run docker:build-dev",
+    "build:prod": "cd Server && npm run docker:build-prod && cd ../Frontend && npm run docker:build-prod"
+  }
+}
