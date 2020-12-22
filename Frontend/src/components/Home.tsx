@@ -12,10 +12,14 @@ export const Home = () => {
   useEffect(() => {
     if (!socket) return;
 
-    socket.once("welcome", (rooms: string[]) => {
+    socket.on("welcome", (rooms: string[]) => {
       setRooms(rooms);
       setLoading(false);
     });
+
+    return () => {
+      socket.off("welcome");
+    };
   }, [socket]);
 
   const changeMessage = (event: React.ChangeEvent<HTMLInputElement>) => {

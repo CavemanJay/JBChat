@@ -4,10 +4,10 @@ config();
 import { Message, Room } from "./interfaces";
 import http from "http";
 
-import socketIO from "socket.io";
 import { routes } from "./routes";
 import { configureEvents } from "./event listeners";
 import * as utils from "./utils";
+import { Server, Socket } from "socket.io";
 
 // The current in-memory data structure that stores the rooms and their messages
 const rooms: Room[] = [
@@ -32,7 +32,12 @@ function createRoom(id: string) {
 
 const app = utils.configureExpress(createRoom, rooms);
 const server = http.createServer(app);
-const io = socketIO(server, { path: routes.chat });
+const io = new Server(server, {
+  path: routes.chat,
+  cors: {
+    origin: "*",
+  },
+});
 
 const port = process.env.PORT || "3000";
 
@@ -61,7 +66,7 @@ function broadcastToAllListeners(message: any) {
   io.sockets.emit("message", message);
 }
 
-io.on("connection", (socket) => {
+io.on("connection", (socket: Socket) => {
   // Read parameters from the initial handshake
   // const { id, room }: { id: string; room: string } = socket.handshake.query;
   utils.log("Received connection");
