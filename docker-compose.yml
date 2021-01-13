@@ -14,5 +14,16 @@ services:
     image: jbchat:dev-server
     build: ./Server
     container_name: server
+    environment: 
+      DB_HOST: db
+      DB_NAME: JBChat
     ports:
       - "3000:3000"
+    depends_on: 
+      - db
+
+  db:
+    image: mongo
+    container_name: database
+    volumes:
+      - ./data:/data/db
