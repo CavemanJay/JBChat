@@ -1,13 +1,7 @@
-import { Socket } from "socket.io";
-import { Message } from ".";
+import { IMessage, IUser } from ".";
 
-export interface Room {
+export interface IRoom {
   id: string;
-  messages: Message[];
-  participants: User[];
-}
-
-export interface User {
-  // socket: Socket;
-  id: string;
+  messages: IMessage[];
+  participants: IUser[];
 }

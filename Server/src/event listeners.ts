@@ -1,5 +1,5 @@
 import socketIO from "socket.io";
-import { Message, Room } from "./interfaces";
+import { IMessage, IRoom } from "./interfaces";
 import * as utils from "./utils";
 
 export function configureEvents(
@@ -29,7 +29,7 @@ export function configureEvents(
   //   }
   // });
 
-  socket.on("clientMessage", (message: Message) => {
+  socket.on("clientMessage", (message: IMessage) => {
     message.sender = id;
     newMessage(message);
   });

@@ -1,7 +1,7 @@
 import * as bodyParser from "body-parser";
 import express from "express";
 import { v4 as uuid } from "uuid";
-import { Room } from "./interfaces";
+import { IRoom } from "./interfaces";
 import { routes } from "./routes";
 
 function unitTesting() {
@@ -17,11 +17,12 @@ export function log(message?: any, ...optionalParams: any[]) {
   if (!unitTesting()) console.log(message, ...optionalParams);
 }
 
-export function registerUser() {
+export function newUuid() {
   return uuid();
 }
 
-export function configureExpress(createRoom: Function, rooms: Room[]) {
+// export function configureExpress(createRoom: Function, rooms: IRoom[]) {
+export function configureExpress() {
   const app = express();
 
   // This allows us to parse json-formatted post requests
@@ -38,13 +39,13 @@ export function configureExpress(createRoom: Function, rooms: Room[]) {
     //   .readFileSync(path.join(__dirname, "..", "index.html"))
     //   .toString();
 
-    // response.send(content);
+    res.send("");
 
-    res.send(`Available rooms: ${JSON.stringify(rooms)}`);
+    // res.send(`Available rooms: ${JSON.stringify(rooms)}`);
   });
 
   app.post(routes.newRoom, (req, res) => {
-    createRoom(uuid());
+    // createRoom(uuid());
     res.sendStatus(200);
   });
 
