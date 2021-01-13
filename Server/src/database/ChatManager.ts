@@ -1,9 +1,11 @@
 import monk from "monk";
 import * as utils from "../utils";
+import { MessageManager } from "./MessageManager";
 import { RoomManager } from "./RoomManager";
 
 export class ChatManager {
   public readonly rooms: RoomManager;
+  public readonly messages: MessageManager;
 
   constructor(hostName: string, dbName: string) {
     const db = monk(`${hostName}/${dbName}`, {
@@ -12,6 +14,7 @@ export class ChatManager {
     });
 
     this.rooms = new RoomManager(db);
+    this.messages = new MessageManager(db);
 
     this.seed();
   }

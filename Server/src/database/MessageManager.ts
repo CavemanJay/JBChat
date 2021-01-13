@@ -9,15 +9,7 @@ export class MessageManager {
   }
 
   async add(roomId: string, message: IMessage): Promise<Error | null> {
-    const room = await this.rooms.findOne({ id: roomId });
-
-    if (!room) {
-      return RoomNotFound;
-    }
-
-    room.messages.push(message);
-
-    await this.rooms.update({ id: roomId }, room);
+    await this.rooms.update({ id: roomId }, { $push: { messages: message } });
 
     return null;
   }

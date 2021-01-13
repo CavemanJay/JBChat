@@ -1,38 +1,23 @@
 import socketIO from "socket.io";
+import { ChatManager } from "./database/ChatManager";
 import { IMessage, IRoom } from "./interfaces";
 import * as utils from "./utils";
 
 export function configureEvents(
   socket: socketIO.Socket,
-  id: string,
-  room: string,
-  createRoom: Function,
-  newMessage: Function,
-  broadcast: (...args: any[]) => void
+  db: ChatManager,
+  userId: string,
+  sendMessage: (id: string, message: IMessage) => void
 ) {
-  // I want to handle the logic differently for when a room is not found. Think it should be the client's responsibility to get this part right
+  socket.on("getMessages", async (roomId: string) => {
+    const room = await db.rooms.find(roomId);
 
-  // socket.on("roomNotFoundResponse", (response: string) => {
-  //   if (!response) {
-  //     try {
-  //       socket.disconnect();
-  //     } catch (_) {}
-  //   }
-
-  //   if (response.toLowerCase().startsWith("y")) {
-  //     utils.log(`Creating room ${room}`);
-
-  //     createRoom(room);
-  //     socket.join(room);
-  //   } else {
-  //     socket.disconnect();
-  //   }
-  // });
-
-  socket.on("clientMessage", (message: IMessage) => {
-    message.sender = id;
-    newMessage(message);
+    socket.emit("getMessagesResponse", room?.messages);
   });
 
-  socket.on("message", broadcast);
+  socket.on("message", (message: IMessage, roomId: string) => {
+    message.sender = userId;
+
+    sendMessage(roomId, message);
+  });
 }
