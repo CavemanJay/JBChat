@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import io from "socket.io-client";
-import { getEnvironmentKey } from "../utils/env";
+import { getEnvironmentKey, getUserId } from "../utils";
 
 const SocketContext = React.createContext<SocketIOClient.Socket | undefined>(
   undefined
@@ -22,7 +22,7 @@ export const SocketProvider: React.FC<React.PropsWithChildren<{}>> = ({
     const _socket = io(`http://${host}:${port}`, {
       path: "/chat",
       query: {
-        userId: localStorage.getItem("id"),
+        userId: getUserId(),
       },
     });
 

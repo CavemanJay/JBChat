@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { RouteComponentProps } from "react-router-dom";
 import { useSocket } from "../contexts/SocketProvider";
 import { Message } from "../models";
+import { getUserId } from "../utils";
 
 type TParams = { id: string };
 
@@ -24,11 +25,6 @@ export const Chat = ({ match }: RouteComponentProps<TParams>) => {
     });
 
     socket.on("message", (message: Message) => {
-      if (message.sender === localStorage.getItem("id")) {
-        message.sender = "Me";
-      }
-      console.log("Message received");
-
       setMessages((messages) => [...messages, message]);
     });
 
@@ -64,7 +60,8 @@ export const Chat = ({ match }: RouteComponentProps<TParams>) => {
         {messages.map((message, i) => (
           <div key={i} style={{ padding: "10px" }}>
             <span>
-              {message.sender}: {message.content}
+              {message.sender === getUserId() ? "Me" : message.sender}:{" "}
+              {message.content}
             </span>
           </div>
         ))}
