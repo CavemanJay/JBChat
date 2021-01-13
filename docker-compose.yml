@@ -2,7 +2,7 @@ version: "3"
 
 services:
   frontend:
-    container_name: react_frontend
+    container_name: react
     image: jbchat:dev-frontend
     build: ./Frontend
     ports:

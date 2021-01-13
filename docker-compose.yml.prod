@@ -2,7 +2,7 @@ version: "3"
 
 services:
   frontend:
-    container_name: react_frontend
+    container_name: react
     image: jbchat:latest-frontend
     build: ./Frontend/Dockerfile.prod
     ports:
@@ -14,5 +14,16 @@ services:
     image: jbchat:latest-server
     build: ./Server/Dockerfile.prod
     container_name: server
+    environment: 
+      DB_HOST: db
+      DB_NAME: JBChat
     ports:
       - "3000:3000"
+    depends_on: 
+      - db
+
+  db:
+    image: mongo
+    container_name: database
+    volumes:
+      - ./data:/data/db
