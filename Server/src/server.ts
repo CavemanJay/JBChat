@@ -15,10 +15,16 @@ const rooms: Room[] = [
     id: "General",
     messages: [
       {
-        sender: "Jay",
+        sender: "Server",
         content: "Hi! Welcome to JB Chat!",
       },
     ],
+    participants: [],
+  },
+  {
+    id: "Test",
+    messages: [],
+    participants: [],
   },
 ];
 
@@ -27,7 +33,7 @@ const rooms: Room[] = [
  * @param id The id of the room
  */
 function createRoom(id: string) {
-  rooms.push({ id, messages: [] });
+  rooms.push({ id, messages: [], participants: [] });
 }
 
 const app = utils.configureExpress(createRoom, rooms);
@@ -35,6 +41,7 @@ const server = http.createServer(app);
 const io = new Server(server, {
   path: routes.chat,
   cors: {
+    // origin: ["localhost:3001"],
     origin: "*",
   },
 });
@@ -48,7 +55,7 @@ const port = process.env.PORT || "3000";
  */
 function sendMessage(roomId: string, message: Message) {
   // Find the target room
-  const targetRoom = rooms.find((room) => room.id === roomId);
+  const targetRoom = getRoom(roomId);
 
   // TODO: If the room doesn't exist (error handling)
   if (!targetRoom) {
@@ -66,49 +73,46 @@ function broadcastToAllListeners(message: any) {
   io.sockets.emit("message", message);
 }
 
+function getRoom(roomId: string) {
+  return rooms.find((x) => x.id === roomId);
+}
+
 io.on("connection", (socket: Socket) => {
-  // Read parameters from the initial handshake
-  // const { id, room }: { id: string; room: string } = socket.handshake.query;
   utils.log("Received connection from:", socket.client.conn.remoteAddress);
+
+  // @ts-ignore
+  let userId: string = socket.handshake.query.userId;
+  if (userId && userId === "null") {
+    userId = utils.registerUser();
+  }
 
   // Send a list of available rooms
   socket.emit(
     "welcome",
-    rooms.map((x) => x.id)
+    rooms.map((x) => x.id),
+    userId
   );
 
-  // Find the room that the client wants to join
-  // const targetRoom = rooms.find((x) => x.id === room);
+  socket.join("General");
 
-  // Configure socket event listeners
-  // configureEvents(
-  //   socket,
-  //   id,
-  //   room,
-  //   createRoom,
-  //   (message: Message) => {
-  //     // console.log(message);
-  //     sendMessage(room, message);
-  //   },
-  //   broadcastToAllListeners
-  // );
+  rooms[0].participants.push({
+    // socket,
+    id: userId,
+  });
 
-  // If the room the client wants to join does not exist
-  // if (!targetRoom) {
-  //   utils.log(
-  //     `Received connection from user ${id} to room ${room}. Room nonexistent.`
-  //   );
+  socket.on("getMessages", (roomId: string) => {
+    socket.emit("getMessagesResponse", getRoom(roomId)?.messages);
+  });
 
-  //   // Notify the client that the room does not exist
-  //   socket.emit("roomNotFound", `The requested room '${room}' does not exist`);
-  // } else {
-  //   socket.join(targetRoom.id);
+  socket.on("message", (message: Message, roomId: string) => {
+    message.sender = userId;
+    // socket.to(roomId).emit("message");
 
-  //   socket.emit("joinedRoom", {
-  //     content: `You have joined room: ${targetRoom.id}`,
-  //     sender: "Server",
-  //   });
-  // }
+    utils.log("Sending message to clients");
+
+    getRoom(roomId)?.messages.push(message);
+    io.in(roomId).emit("message", message);
+  });
 });
 
 export function start(unitTesting = false) {

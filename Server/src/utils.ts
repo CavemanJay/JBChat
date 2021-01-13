@@ -17,11 +17,20 @@ export function log(message?: any, ...optionalParams: any[]) {
   if (!unitTesting()) console.log(message, ...optionalParams);
 }
 
+export function registerUser() {
+  return uuid();
+}
+
 export function configureExpress(createRoom: Function, rooms: Room[]) {
   const app = express();
 
   // This allows us to parse json-formatted post requests
   app.use(bodyParser.json());
+  // app.use((req, res, next) => {
+  //   log("Middleware test")
+  //   res.setHeader("Access-Control-Allow-Origin", "*");
+  //   next()
+  // });
 
   // home route
   app.get(routes.base, (req, res) => {

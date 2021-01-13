@@ -12,8 +12,9 @@ export const Home = () => {
   useEffect(() => {
     if (!socket) return;
 
-    socket.on("welcome", (rooms: string[]) => {
+    socket.on("welcome", (rooms: string[], userId: string) => {
       setRooms(rooms);
+      localStorage.setItem("id", userId);
       setLoading(false);
     });
 
@@ -51,19 +52,6 @@ export const Home = () => {
             <Link to={`/chat/${room}`}>Join</Link>
           </div>
         ))}
-        {/* <div id="message-container">
-          <form id="message-form">
-            <input
-              type="text"
-              id="message-input"
-              value={message}
-              onChange={changeMessage}
-            />
-            <button type="submit" id="send-button" onClick={sendMessage}>
-              Send Message
-            </button>
-          </form>
-        </div> */}
       </div>
     );
   }

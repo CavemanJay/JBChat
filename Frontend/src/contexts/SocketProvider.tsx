@@ -21,6 +21,9 @@ export const SocketProvider: React.FC<React.PropsWithChildren<{}>> = ({
 
     const _socket = io(`http://${host}:${port}`, {
       path: "/chat",
+      query: {
+        userId: localStorage.getItem("id"),
+      },
     });
 
     setSocket(_socket);
